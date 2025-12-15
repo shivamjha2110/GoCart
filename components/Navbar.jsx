@@ -1,5 +1,5 @@
 'use client'
-import { PackageIcon, Search, ShoppingCart, ShoppingBag, LogOut } from "lucide-react";
+import { PackageIcon, Search, ShoppingCart, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react"; // Added useEffect
@@ -10,7 +10,7 @@ import { clearCart } from "@/lib/features/cart/cartSlice"; // Import the clear a
 
 const Navbar = () => {
     const { user } = useUser()
-    const { openSignIn, signOut } = useClerk()
+    const { openSignIn } = useClerk()
     const router = useRouter();
     const dispatch = useDispatch(); // Initialize dispatch
     const [search, setSearch] = useState('')
@@ -36,12 +36,6 @@ const Navbar = () => {
     const handleSearch = (e) => {
         e.preventDefault()
         router.push(`/shop?search=${search}`)
-    }
-
-    // Direct logout handler that clears cart before signing out
-    const handleLogout = () => {
-        dispatch(clearCart()); // Clear cart state immediately
-        signOut(); // Clerk sign out
     }
 
     return (
@@ -103,10 +97,14 @@ const Navbar = () => {
                                 Login
                             </button>
                         ) : (
-                            <UserButton>
+                            <UserButton appearance={{
+                                elements: {
+                                    userButtonAvatarBox: "h-8 w-8",
+                                    userButtonTrigger: "focus:shadow-none"
+                                }
+                            }}>
                                 <UserButton.MenuItems>
                                     <UserButton.Action labelIcon={<PackageIcon size={16}/>} label="My Orders" onClick={()=> router.push('/orders')}/>
-                                    <UserButton.Action labelIcon={<LogOut size={16}/>} label="Sign out" onClick={handleLogout} />
                                 </UserButton.MenuItems>
                             </UserButton>
                         )}
@@ -120,10 +118,14 @@ const Navbar = () => {
                                      <ShoppingCart size={20} className="text-slate-600"/>
                                      <span className="absolute -top-2 -right-2 text-[10px] text-white bg-indigo-600 w-4 h-4 flex items-center justify-center rounded-full">{cartCount}</span>
                                 </Link>
-                                <UserButton>
+                                <UserButton appearance={{
+                                    elements: {
+                                        userButtonAvatarBox: "h-8 w-8",
+                                        userButtonTrigger: "focus:shadow-none"
+                                    }
+                                }}>
                                     <UserButton.MenuItems>
                                         <UserButton.Action labelIcon={<PackageIcon size={16}/>} label="My Orders" onClick={()=> router.push('/orders')}/>
-                                        <UserButton.Action labelIcon={<LogOut size={16}/>} label="Sign out" onClick={handleLogout} />
                                     </UserButton.MenuItems>
                                 </UserButton>
                             </div>
