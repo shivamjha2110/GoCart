@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function Cart() {
 
-    const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '$';
+    const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '₹';
     
     // Get cart items and product list from Redux
     const { cartItems } = useSelector(state => state.cart);
