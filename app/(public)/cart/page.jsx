@@ -3,6 +3,7 @@ import Counter from "@/components/Counter";
 import OrderSummary from "@/components/OrderSummary";
 import PageTitle from "@/components/PageTitle";
 import { deleteItemFromCart } from "@/lib/features/cart/cartSlice";
+import { fetchProducts } from "@/lib/features/product/productSlice";
 import { Trash2Icon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ export default function Cart() {
 
     const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '$';
     
+    // Get cart items and product list from Redux
     const { cartItems } = useSelector(state => state.cart);
     const products = useSelector(state => state.product.list);
 
@@ -20,20 +22,29 @@ export default function Cart() {
     const [cartArray, setCartArray] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
 
+    // Debug logs
+    console.log("Cart Items (IDs):", cartItems);
+    console.log("Products List:", products);
+
     const createCartArray = () => {
-        setTotalPrice(0);
-        const cartArray = [];
+        let currentTotal = 0;
+        const tempCartArray = [];
+
         for (const [key, value] of Object.entries(cartItems)) {
-            const product = products.find(product => product.id === key);
+            // FIX: Convert both IDs to String to ensure they match (e.g. "1" vs 1)
+            const product = products.find(p => String(p.id) === String(key));
+
             if (product) {
-                cartArray.push({
+                tempCartArray.push({
                     ...product,
                     quantity: value,
                 });
-                setTotalPrice(prev => prev + product.price * value);
+                currentTotal += product.price * value;
             }
         }
-        setCartArray(cartArray);
+        
+        setCartArray(tempCartArray);
+        setTotalPrice(currentTotal);
     }
 
     const handleDeleteItemFromCart = (productId) => {
@@ -41,6 +52,14 @@ export default function Cart() {
     }
 
     useEffect(() => {
+        // Agar products list khali hai, to server se dubara mangwao
+        if (products.length === 0) {
+            dispatch(fetchProducts({}));
+        }
+    }, [dispatch, products.length]);
+
+    useEffect(() => {
+        // Ensure we have products before trying to build the cart
         if (products.length > 0) {
             createCartArray();
         }
@@ -50,7 +69,6 @@ export default function Cart() {
         <div className="min-h-screen mx-6 text-slate-800">
 
             <div className="max-w-7xl mx-auto ">
-                {/* Title */}
                 <PageTitle heading="My Cart" text="items in your cart" linkText="Add more" />
 
                 <div className="flex items-start justify-between gap-5 max-lg:flex-col">

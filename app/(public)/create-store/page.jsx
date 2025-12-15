@@ -69,15 +69,26 @@ export default function CreateStore() {
         if(!user){
             return toast('Please login to continue')
         }
+
+        // Client-side validation
+        if(!storeInfo.name || !storeInfo.username || !storeInfo.description || !storeInfo.email || !storeInfo.contact || !storeInfo.address || !storeInfo.image){
+            return toast.error('Please fill all required fields and upload a store logo')
+        }
+
+        // Validate image is a file object
+        if(!(storeInfo.image instanceof File)){
+            return toast.error('Please select a valid image file for your store logo')
+        }
+
         try {
             const token = await getToken()
             const formData = new FormData()
-            formData.append("name", storeInfo.name)
-            formData.append("description", storeInfo.description)
-            formData.append("username", storeInfo.username)
-            formData.append("email", storeInfo.email)
-            formData.append("contact", storeInfo.contact)
-            formData.append("address", storeInfo.address)
+            formData.append("name", storeInfo.name.trim())
+            formData.append("description", storeInfo.description.trim())
+            formData.append("username", storeInfo.username.trim())
+            formData.append("email", storeInfo.email.trim())
+            formData.append("contact", storeInfo.contact.trim())
+            formData.append("address", storeInfo.address.trim())
             formData.append("image", storeInfo.image)
 
             const { data } = await axios.post('/api/store/create', formData, {headers: {Authorization: `Bearer ${token}`}})
@@ -111,7 +122,7 @@ export default function CreateStore() {
                         {/* Title */}
                         <div>
                             <h1 className="text-3xl ">Add Your <span className="text-slate-800 font-medium">Store</span></h1>
-                            <p className="max-w-lg">To become a seller on GoCart, submit your store details for review. Your store will be activated after admin verification.</p>
+                            <p className="max-w-lg">To become a seller on GoToCart, submit your store details for review. Your store will be activated after admin verification.</p>
                         </div>
 
                         <label className="mt-10 cursor-pointer">

@@ -1,6 +1,6 @@
-import imagekit from "@/configs/imageKit"
-import prisma from "@/lib/prisma"
-import authSeller from "@/middlewares/authSeller"
+import imagekit from "@/configs/imageKit.js"
+import prisma from "@/lib/prisma.js"
+import authSeller from "@/middlewares/authSeller.js"
 import {getAuth} from "@clerk/nextjs/server"
 import { NextResponse } from "next/server";
 

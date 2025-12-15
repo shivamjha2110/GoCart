@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma"
+import prisma from "@/lib/prisma.js"
 import { NextResponse } from "next/server"
 import Stripe from "stripe"
 
@@ -18,7 +18,7 @@ export async function POST(request){
 
             const {orderIds, userId, appId} = session.data[0].metadata
             
-            if(appId !== 'gocart'){
+            if(appId !== 'GoToCart'){
                 return NextResponse.json({received: true, message: 'Invalid app id'})
             }
 

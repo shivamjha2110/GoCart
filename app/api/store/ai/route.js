@@ -1,5 +1,5 @@
-import { openai } from "@/configs/openai";
-import authSeller from "@/middlewares/authSeller";
+import { openai } from "@/configs/openai.js";
+import authSeller from "@/middlewares/authSeller.js";
 import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 

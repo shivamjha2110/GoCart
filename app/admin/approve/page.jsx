@@ -53,19 +53,26 @@ export default function AdminApprove() {
             <h1 className="text-2xl">Approve <span className="text-slate-800 font-medium">Stores</span></h1>
 
             {stores.length ? (
-                <div className="flex flex-col gap-4 mt-4">
+                <div className="flex flex-col gap-8 mt-4">
                     {stores.map((store) => (
-                        <div key={store.id} className="bg-white border rounded-lg shadow-sm p-6 flex max-md:flex-col gap-4 md:items-end max-w-4xl" >
-                            {/* Store Info */}
+                        <div key={store.id} className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+
+                            {/* 1. The Store Info Card */}
                             <StoreInfo store={store} />
 
-                            {/* Actions */}
-                            <div className="flex gap-3 pt-2 flex-wrap">
-                                <button onClick={() => toast.promise(handleApprove({ storeId: store.id, status: 'approved' }), { loading: "approving" })} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm" >
-                                    Approve
+                            {/* 2. THE ACTION FOOTER (Proper Place for Buttons) */}
+                            <div className="px-8 py-4 bg-slate-50 border-t border-slate-100 rounded-b-2xl flex justify-end gap-4">
+                                <button
+                                    onClick={() => toast.promise(handleApprove({ storeId: store.id, status: 'rejected' }), { loading: 'rejecting' })}
+                                    className="px-6 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-red-600 hover:bg-red-50 border border-slate-200 hover:border-red-200 transition-all"
+                                >
+                                    Reject Application
                                 </button>
-                                <button onClick={() => toast.promise(handleApprove({ storeId: store.id, status: 'rejected' }), { loading: 'rejecting' })} className="px-4 py-2 bg-slate-500 text-white rounded hover:bg-slate-600 text-sm" >
-                                    Reject
+                                <button
+                                    onClick={() => toast.promise(handleApprove({ storeId: store.id, status: 'approved' }), { loading: "approving" })}
+                                    className="px-6 py-2.5 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all transform active:scale-95"
+                                >
+                                    Approve Store
                                 </button>
                             </div>
                         </div>

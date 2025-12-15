@@ -1,6 +1,6 @@
 'use client'
-import { dummyStoreDashboardData } from "@/assets/assets"
-import Loading from "@/components/Loading"
+import { dummyStoreDashboardData } from "@/assets/assets.js"
+import Loading from "@/components/Loading.jsx"
 import { useAuth } from "@clerk/nextjs"
 import axios from "axios"
 import { CircleDollarSignIcon, ShoppingBasketIcon, StarIcon, TagsIcon } from "lucide-react"
@@ -13,7 +13,7 @@ export default function Dashboard() {
 
     const {getToken} = useAuth()
 
-    const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '$'
+    const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '₹'
 
     const router = useRouter()
 

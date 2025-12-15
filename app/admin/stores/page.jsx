@@ -1,13 +1,14 @@
 'use client'
-import { storesDummyData } from "@/assets/assets"
+import PageTitle from "@/components/PageTitle"
 import StoreInfo from "@/components/admin/StoreInfo"
 import Loading from "@/components/Loading"
 import { useAuth, useUser } from "@clerk/nextjs"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
+import { Search } from "lucide-react"
 
-export default function AdminStores() {
+export default function ActiveStoresPage() {
 
     const { user } = useUser()
     const { getToken } = useAuth()
@@ -44,35 +45,60 @@ export default function AdminStores() {
     }, [user])
 
     return !loading ? (
-        <div className="text-slate-500 mb-28">
-            <h1 className="text-2xl">Live <span className="text-slate-800 font-medium">Stores</span></h1>
+        <div className="space-y-8">
+            
+            {/* Page Header Area */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold text-slate-800">Active Stores</h1>
+                    <p className="text-slate-500 text-sm">Manage and monitor all currently active merchant stores.</p>
+                </div>
+                
+                {/* Search Bar */}
+                <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                    <input 
+                        type="text" 
+                        placeholder="Search stores..." 
+                        className="pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm w-full sm:w-64 transition-all"
+                    />
+                </div>
+            </div>
 
-            {stores.length ? (
-                <div className="flex flex-col gap-4 mt-4">
-                    {stores.map((store) => (
-                        <div key={store.id} className="bg-white border border-slate-200 rounded-lg shadow-sm p-6 flex max-md:flex-col gap-4 md:items-end max-w-4xl" >
-                            {/* Store Info */}
-                            <StoreInfo store={store} />
+            {/* Grid Layout */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {stores.map((store) => (
+                    <div key={store.id} className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300">
 
-                            {/* Actions */}
-                            <div className="flex items-center gap-3 pt-2 flex-wrap">
-                                <p>Active</p>
-                                <label className="relative inline-flex items-center cursor-pointer text-gray-900">
-                                    <input type="checkbox" className="sr-only peer" onChange={() => toast.promise(toggleIsActive(store.id), { loading: "Updating data..." })} checked={store.isActive} />
-                                    <div className="w-9 h-5 bg-slate-300 rounded-full peer peer-checked:bg-green-600 transition-colors duration-200"></div>
-                                    <span className="dot absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-4"></span>
-                                </label>
-                            </div>
+                        {/* Store Info Card */}
+                        <StoreInfo store={store} />
+
+                        {/* Action Footer */}
+                        <div className="px-8 py-4 bg-slate-50 border-t border-slate-100 rounded-b-2xl flex justify-between items-center">
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${store.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {store.isActive ? 'Active' : 'Inactive'}
+                            </span>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    onChange={() => toast.promise(toggleIsActive(store.id), { loading: "Updating..." })}
+                                    checked={store.isActive}
+                                />
+                                <div className="w-9 h-5 bg-slate-300 rounded-full peer peer-checked:bg-green-600 transition-colors duration-200"></div>
+                                <span className="dot absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-4"></span>
+                            </label>
                         </div>
-                    ))}
-
+                    </div>
+                ))}
+            </div>
+            
+            {/* Empty State */}
+            {stores.length === 0 && (
+                <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-300">
+                    <p className="text-slate-400 font-medium">No active stores found.</p>
                 </div>
-            ) : (
-                <div className="flex items-center justify-center h-80">
-                    <h1 className="text-3xl text-slate-400 font-medium">No stores Available</h1>
-                </div>
-            )
-            }
+            )}
         </div>
     ) : <Loading />
 }

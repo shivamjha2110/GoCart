@@ -10,16 +10,30 @@ export async function POST(request){
         // Get the data from the form
         const formData = await request.formData()
 
-        const name = formData.get("name")
-        const username = formData.get("username").trim()
-        const description = formData.get("description")
-        const email = formData.get("email")
-        const contact = formData.get("contact")
-        const address = formData.get("address")
+        const name = formData.get("name")?.trim()
+        const username = formData.get("username")?.trim()
+        const description = formData.get("description")?.trim()
+        const email = formData.get("email")?.trim()
+        const contact = formData.get("contact")?.trim()
+        const address = formData.get("address")?.trim()
         const image = formData.get("image")
 
-        if(!name || !username || !description || !email || !contact || !address || !image){
-            return NextResponse.json({error: "missing store info"}, {status: 400})
+        // Validate required fields
+        if(!name || !username || !description || !email || !contact || !address){
+            return NextResponse.json({error: "All text fields are required"}, {status: 400})
+        }
+
+        if(!image || !(image instanceof File)){
+            return NextResponse.json({error: "Store logo image is required"}, {status: 400})
+        }
+
+        // Validate username format
+        if(username.length < 3){
+            return NextResponse.json({error: "Username must be at least 3 characters long"}, {status: 400})
+        }
+
+        if(!/^[a-zA-Z0-9_]+$/.test(username)){
+            return NextResponse.json({error: "Username can only contain letters, numbers, and underscores"}, {status: 400})
         }
 
         // check is user have already registered a store
@@ -42,12 +56,18 @@ export async function POST(request){
         }
 
         // image upload to imagekit
-        const buffer = Buffer.from(await image.arrayBuffer());
-        const response = await imagekit.upload({
-            file: buffer,
-            fileName: image.name,
-            folder: "logos"
-        })
+        let response;
+        try {
+            const buffer = Buffer.from(await image.arrayBuffer());
+            response = await imagekit.upload({
+                file: buffer,
+                fileName: image.name,
+                folder: "logos"
+            })
+        } catch (uploadError) {
+            console.error('Image upload failed:', uploadError);
+            return NextResponse.json({error: "Failed to upload store logo. Please try again."}, {status: 400})
+        }
 
         const optimizedImage = imagekit.url({
             path: response.filePath,
@@ -80,8 +100,17 @@ export async function POST(request){
         return NextResponse.json({message: "applied, waiting for approval"})
 
     } catch (error) {
-        console.error(error);
-        return NextResponse.json({error: error.code || error.message}, { status: 400 })
+        console.error('Store creation error:', error);
+
+        // Handle specific database errors
+        if(error.code === 'P2002'){
+            return NextResponse.json({error: "Username or email already exists"}, { status: 400 })
+        }
+
+        // Handle other errors
+        return NextResponse.json({
+            error: error.message || "Failed to create store. Please try again."
+        }, { status: 400 })
     }
 }
 

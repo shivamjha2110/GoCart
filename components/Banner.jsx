@@ -12,16 +12,28 @@ export default function Banner() {
         navigator.clipboard.writeText('NEW20');
     };
 
-    return isOpen && (
-        <div className="w-full px-6 py-1 font-medium text-sm text-white text-center bg-gradient-to-r from-violet-500 via-[#9938CA] to-[#E0724A]">
-            <div className='flex items-center justify-between max-w-7xl  mx-auto'>
-                <p>Get 20% OFF on Your First Order!</p>
-                <div className="flex items-center space-x-6">
-                    <button onClick={handleClaim} type="button" className="font-normal text-gray-800 bg-white px-7 py-2 rounded-full max-sm:hidden">Claim Offer</button>
-                    <button onClick={() => setIsOpen(false)} type="button" className="font-normal text-gray-800 py-2 rounded-full">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect y="12.532" width="17.498" height="2.1" rx="1.05" transform="rotate(-45.74 0 12.532)" fill="#fff" />
-                            <rect x="12.533" y="13.915" width="17.498" height="2.1" rx="1.05" transform="rotate(-135.74 12.533 13.915)" fill="#fff" />
+    if (!isOpen) return null;
+
+    return (
+        // Removed 'fixed' positioning logic. Now it fills its container.
+        <div className="w-full relative px-6 py-3 font-medium text-sm text-white text-center bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 overflow-hidden group">
+            
+            {/* Decorative Shine Effect */}
+            <div className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:left-[100%] transition-all duration-1000"></div>
+
+            <div className='flex flex-col sm:flex-row items-center justify-between max-w-7xl mx-auto gap-4 relative z-10'>
+                <div className="flex items-center gap-3">
+                    <span className="bg-white/20 px-2 py-0.5 rounded text-xs font-bold border border-white/30">LIMITED OFFER</span>
+                    <p className="text-sm sm:text-base">Get <span className="font-bold text-yellow-300">20% OFF</span> on Your First Order!</p>
+                </div>
+                
+                <div className="flex items-center gap-4">
+                    <button onClick={handleClaim} type="button" className="bg-white text-indigo-600 hover:bg-slate-50 font-bold text-xs sm:text-sm px-6 py-2 rounded-full transition-all shadow-md active:scale-95">
+                        Claim Now
+                    </button>
+                    <button onClick={() => setIsOpen(false)} type="button" className="text-white/80 hover:text-white transition-colors p-1">
+                        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 13L13 1M1 1L13 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                     </button>
                 </div>
