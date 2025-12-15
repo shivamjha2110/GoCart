@@ -3,7 +3,7 @@ import { Truck, ShieldCheck, Headset, CreditCard } from "lucide-react";
 import { motion } from "framer-motion";
 
 const features = [
-    { icon: Truck, title: "Free Shipping", desc: "On all orders above ₹999" },
+    { icon: Truck, title: "Free Shipping", desc: "On all orders above $5" },
     { icon: ShieldCheck, title: "Secure Payment", desc: "100% secure transaction" },
     { icon: Headset, title: "24/7 Support", desc: "Dedicated support team" },
     { icon: CreditCard, title: "Easy Returns", desc: "7-day money back guarantee" },
