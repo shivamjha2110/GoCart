@@ -11,7 +11,7 @@ import toast from 'react-hot-toast'
 const ProductCard = ({ product }) => {
     
     const dispatch = useDispatch()
-    const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '$'
+    const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '₹'
 
     const handleAddToCart = (e) => {
         e.preventDefault(); 
